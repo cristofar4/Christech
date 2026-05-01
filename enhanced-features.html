@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChrisTech - Enhanced E-commerce Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+        }
+
+        :root {
+            --navy: #0a2540;
+            --blue: #0077ff;
+            --red: #e11d48;
+            --green: #10b981;
+            --gold: #f59e0b;
+            --gray-light: #f3f4f6;
+            --gray-dark: #374151;
+        }
+
+        body {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, var(--navy) 0%, #1a3f5f 100%);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: white !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link {
+            color: white !important;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-link:hover {
+            color: var(--gold) !important;
+            transform: translateY(-2px);
+        }
+
+        .nav-badge {
+            background-color: var(--red);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 5px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            animation: slideDown 0.6s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            animation: slideUp 0.6s ease 0.2s backwards;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--blue);
+            background: white;
+            color: var(--blue);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--blue);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 119, 255, 0.3);
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--red);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .wishlist-btn:hover {
+            background: var(--red);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn.added {
+            background: var(--red);
+            color: white;
+        }
+
+        /* Reviews Section */
+        .review-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--blue);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .review-rating {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .review-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .review-comment {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 10px 0;
+        }
+
+        .review-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .helpful-btn {
+            background: none;
+            border: 1px solid #ddd;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .helpful-btn:hover {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        /* User Profile Section */
+        .profile-header {
+            background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 20px;
+            color: var(--blue);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--blue);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        /* Analytics Charts */
+        .chart-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--navy);
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--blue) 0%, var(--navy) 100%);
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 20px;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: translateY(-5px);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--blue);
+        }
+
+        /* Notifications */
+        .notification {
+            background: white;
+            border-left: 4px solid var(--blue);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification.unread {
+            background: #e7f1ff;
+            border-left-color: var(--blue);
+        }
+
+        .notification.success {
+            border-left-color: var(--green);
+        }
+
+        .notification.warning {
+            border-left-color: var(--gold);
+        }
+
+        .notification.error {
+            border-left-color: var(--red);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bar-chart {
+                height: 200px;
+            }
+
+            .tabs-nav {
+                gap: 5px;
+            }
+
+            .tab-btn {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="bi bi-phone"></i> ChrisTech</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('home')">
+                            <i class="bi bi-house"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('products')">
+                            <i class="bi bi-box"></i> Shop
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('profile')">
+                            <i class="bi bi-person"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('analytics')">
+                            <i class="bi bi-graph-up"></i> Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('wishlist')">
+                            <i class="bi bi-heart"></i> Wishlist
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('notifications')">
+                            <i class="bi bi-bell"></i> Notifications
+                            <span class="nav-badge" id="notificationBadge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('cart')">
+                            <i class="bi bi-cart"></i> Cart
+                            <span class="nav-badge" id="cartBadge">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Welcome to ChrisTech Enhanced</h1>
+        <p>Premium electronics, accessories, and retro gaming with advanced features</p>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container-fluid" style="padding: 40px 20px;">
+
+        <!-- HOME TAB -->
+        <div id="home" class="tab-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="mb-4">📱 Featured Products</h2>
+                    <div id="featuredProducts" class="row g-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTS TAB -->
+        <div id="products" class="tab-content hidden">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" onclick="filterByCategory('all')">All Products</button>
+                        <button class="tab-btn" onclick="filterByCategory('phones')">Phones</button>
+                        <button class="tab-btn" onclick="filterByCategory('gaming')">Gaming</button>
+                        <button class="tab-btn" onclick="filterByCategory('accessories')">Accessories</button>
+                    </div>
+                    <div id="productsGrid" class="row g-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE TAB -->
+        <div id="profile" class="tab-content hidden">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="profile-header">
+                        <div class="profile-avatar">👤</div>
+                        <h2 id="profileName">Guest User</h2>
+                        <p id="profileEmail">guest@example.com</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalOrders">0</div>
+                            <div class="stat-label">Total Orders</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalSpent">₦0</div>
+                            <div class="stat-label">Total Spent</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="avgOrder">₦0</div>
+                            <div class="stat-label">Avg Order</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="memberSince">Today</div>
+                            <div class="stat-label">Member Since</div>
+                        </div>
+                    </div>
+
+                    <h3 class="mt-5 mb-4">Recent Orders</h3>
+                    <div id="recentOrders" class="row g-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div id="analytics" class="tab-content hidden">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="mb-4">📊 Sales Analytics</h2>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Daily Revenue (Last 30 Days)</div>
+                        <div class="bar-chart" id="revenueChart"></div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Top Products</div>
+                        <div id="topProducts"></div>
+                    </div>
+
+                    <div class="chart-container">
+                        <div class="chart-title">Payment Methods</div>
+                        <div id="paymentStats"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WISHLIST TAB -->
+        <div id="wishlist" class="tab-content hidden">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="mb-4">❤️ My Wishlist</h2>
+                    <div id="wishlistItems" class="row g-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOTIFICATIONS TAB -->
+        <div id="notifications" class="tab-content hidden">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2 class="mb-4">🔔 Notifications</h2>
+                    <div id="notificationsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CART TAB -->
+        <div id="cart" class="tab-content hidden">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h2 class="mb-4">🛒 Shopping Cart</h2>
+                    <div id="cartItems"></div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card" style="position: sticky; top: 100px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Order Summary</h5>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Subtotal:</span>
+                                <span id="subtotal">₦0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3">
+                                <span>Shipping:</span>
+                                <span id="shipping">₦0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-3" style="font-weight: 700; font-size: 1.2rem;">
+                                <span>Total:</span>
+                                <span id="cartTotal">₦0</span>
+                            </div>
+                            <button class="btn btn-primary w-100" onclick="checkout()">Proceed to Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Leave a Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Rating</label>
+                        <div id="ratingStars" style="font-size: 2rem; cursor: pointer;">
+                            <i class="bi bi-star" onclick="setRating(1)"></i>
+                            <i class="bi bi-star" onclick="setRating(2)"></i>
+                            <i class="bi bi-star" onclick="setRating(3)"></i>
+                            <i class="bi bi-star" onclick="setRating(4)"></i>
+                            <i class="bi bi-star" onclick="setRating(5)"></i>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" id="reviewTitle" placeholder="Brief title">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comment</label>
+                        <textarea class="form-control" id="reviewComment" rows="4" placeholder="Your detailed review"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitReview()">Submit Review</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // State Management
+        const state = {
+            cart: [],
+            wishlist: [],
+            notifications: [
+                { id: 1, type: 'success', title: 'Welcome!', message: 'Welcome to ChrisTech Enhanced' },
+                { id: 2, type: 'info', title: 'New Features', message: 'Check out our new analytics dashboard' }
+            ],
+            reviews: [],
+            currentRating: 0,
+            currentProductId: null,
+            products: [
+                {
+                    id: 1,
+                    name: 'iPhone 15 Pro Max',
+                    price: 650000,
+                    category: 'phones',
+                    image: 'https://images.unsplash.com/photo-1592286927505-1def25115558?w=300',
+                    rating: 4.8,
+                    reviews: 245
+                },
+                {
+                    id: 2,
+                    name: 'Samsung S24 Ultra',
+                    price: 580000,
+                    category: 'phones',
+                    image: 'https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=300',
+                    rating: 4.7,
+                    reviews: 189
+                },
+                {
+                    id: 3,
+                    name: 'Nintendo Switch',
+                    price: 45000,
+                    category: 'gaming',
+                    image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=300',
+                    rating: 4.9,
+                    reviews: 542
+                },
+                {
+                    id: 4,
+                    name: 'PS5 Controller',
+                    price: 25000,
+                    category: 'gaming',
+                    image: 'https://images.unsplash.com/photo-1535050487bd-e81e4479e88f?w=300',
+                    rating: 4.6,
+                    reviews: 312
+                },
+                {
+                    id: 5,
+                    name: 'Wireless Earbuds',
+                    price: 18000,
+                    category: 'accessories',
+                    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300',
+                    rating: 4.5,
+                    reviews: 428
+                },
+                {
+                    id: 6,
+                    name: 'Phone Charger',
+                    price: 8000,
+                    category: 'accessories',
+                    image: 'https://images.unsplash.com/photo-1592981615308-97cb64dde2e7?w=300',
+                    rating: 4.4,
+                    reviews: 756
+                }
+            ]
+        };
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            document.getElementById(tabName).classList.remove('hidden');
+
+            if (tabName === 'products') {
+                renderProducts();
+            } else if (tabName === 'profile') {
+                renderProfile();
+            } else if (tabName === 'analytics') {
+                renderAnalytics();
+            } else if (tabName === 'wishlist') {
+                renderWishlist();
+            } else if (tabName === 'notifications') {
+                renderNotifications();
+            } else if (tabName === 'cart') {
+                renderCart();
+            } else if (tabName === 'home') {
+                renderFeaturedProducts();
+            }
+        }
+
+        // Render Featured Products
+        function renderFeaturedProducts() {
+            const container = document.getElementById('featuredProducts');
+            container.innerHTML = state.products.slice(0, 4).map(product => `
+                <div class="col-md-6 col-lg-3">
+                    <div class="card product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-badge">⭐ ${product.rating}</div>
+                        <button class="wishlist-btn" onclick="toggleWishlist(${product.id})">
+                            <i class="bi bi-heart"></i>
+                        </button>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text text-muted">${product.reviews} reviews</p>
+                            <h6 class="text-primary">₦${product.price.toLocaleString()}</h6>
+                            <button class="btn btn-primary btn-sm w-100" onclick="addToCart(${product.id})">
+                                <i class="bi bi-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm w-100 mt-2" onclick="openReviewModal(${product.id})">
+                                <i class="bi bi-star"></i> Review
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render All Products
+        function renderProducts() {
+            const container = document.getElementById('productsGrid');
+            container.innerHTML = state.products.map(product => `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-badge">⭐ ${product.rating}</div>
+                        <button class="wishlist-btn" onclick="toggleWishlist(${product.id})">
+                            <i class="bi bi-heart"></i>
+                        </button>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text text-muted">${product.reviews} reviews</p>
+                            <h6 class="text-primary">₦${product.price.toLocaleString()}</h6>
+                            <button class="btn btn-primary btn-sm w-100" onclick="addToCart(${product.id})">
+                                <i class="bi bi-cart"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter by Category
+        function filterByCategory(category) {
+            const container = document.getElementById('productsGrid');
+            const filtered = category === 'all' ? state.products : state.products.filter(p => p.category === category);
+            
+            container.innerHTML = filtered.map(product => `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-badge">⭐ ${product.rating}</div>
+                        <button class="wishlist-btn" onclick="toggleWishlist(${product.id})">
+                            <i class="bi bi-heart"></i>
+                        </button>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <p class="card-text text-muted">${product.reviews} reviews</p>
+                            <h6 class="text-primary">₦${product.price.toLocaleString()}</h6>
+                            <button class="btn btn-primary btn-sm w-100" onclick="addToCart(${product.id})">
+                                <i class="bi bi-cart"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add to Cart
+        function addToCart(productId) {
+            const product = state.products.find(p => p.id === productId);
+            state.cart.push(product);
+            updateCartBadge();
+            addNotification('success', 'Added to Cart', `${product.name} added to your cart`);
+        }
+
+        // Toggle Wishlist
+        function toggleWishlist(productId) {
+            const index = state.wishlist.indexOf(productId);
+            if (index > -1) {
+                state.wishlist.splice(index, 1);
+            } else {
+                state.wishlist.push(productId);
+            }
+        }
+
+        // Render Cart
+        function renderCart() {
+            const container = document.getElementById('cartItems');
+            
+            if (state.cart.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Your cart is empty</div>';
+                return;
+            }
+
+            let total = 0;
+            container.innerHTML = state.cart.map((product, index) => {
+                total += product.price;
+                return `
+                    <div class="card mb-3">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6>${product.name}</h6>
+                                <p class="text-muted">₦${product.price.toLocaleString()}</p>
+                            </div>
+                            <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">
+                                <i class="bi bi-trash"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('subtotal').textContent = '₦' + total.toLocaleString();
+            document.getElementById('shipping').textContent = '₦5,000';
+            document.getElementById('cartTotal').textContent = '₦' + (total + 5000).toLocaleString();
+        }
+
+        // Remove from Cart
+        function removeFromCart(index) {
+            state.cart.splice(index, 1);
+            renderCart();
+            updateCartBadge();
+        }
+
+        // Update Cart Badge
+        function updateCartBadge() {
+            document.getElementById('cartBadge').textContent = state.cart.length;
+        }
+
+        // Render Profile
+        function renderProfile() {
+            document.getElementById('profileName').textContent = 'Precious Okonkwo';
+            document.getElementById('profileEmail').textContent = 'precious@example.com';
+            document.getElementById('totalOrders').textContent = '12';
+            document.getElementById('totalSpent').textContent = '₦450,000';
+            document.getElementById('avgOrder').textContent = '₦37,500';
+            document.getElementById('memberSince').textContent = 'Jan 2024';
+
+            const recentOrdersContainer = document.getElementById('recentOrders');
+            recentOrdersContainer.innerHTML = `
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>#ORD-001</h6>
+                            <p>3 items • ₦125,000</p>
+                            <span class="badge bg-success">Delivered</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>#ORD-002</h6>
+                            <p>2 items • ₦85,000</p>
+                            <span class="badge bg-warning">Processing</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Analytics
+        function renderAnalytics() {
+            const revenueChart = document.getElementById('revenueChart');
+            const data = [45000, 52000, 48000, 61000, 55000, 68000, 72000];
+            
+            revenueChart.innerHTML = data.map((value, index) => {
+                const maxValue = Math.max(...data);
+                const height = (value / maxValue) * 100;
+                return `
+                    <div class="bar" style="height: ${height}%;">
+                        <div class="bar-value">₦${(value/1000).toFixed(0)}k</div>
+                        <div class="bar-label">Day ${index + 1}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Top Products
+            const topProductsContainer = document.getElementById('topProducts');
+            topProductsContainer.innerHTML = state.products.slice(0, 3).map(product => `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>${product.name}</span>
+                    <span class="badge bg-primary">${product.reviews} sales</span>
+                </div>
+            `).join('');
+
+            // Payment Stats
+            const paymentStats = document.getElementById('paymentStats');
+            paymentStats.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>💳 Card Payments</span>
+                    <span class="badge bg-success">45%</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>🏦 Bank Transfer</span>
+                    <span class="badge bg-info">25%</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span>📱 USSD</span>
+                    <span class="badge bg-warning">20%</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>🚚 Cash on Delivery</span>
+                    <span class="badge bg-secondary">10%</span>
+                </div>
+            `;
+        }
+
+        // Render Wishlist
+        function renderWishlist() {
+            const container = document.getElementById('wishlistItems');
+            const wishlistProducts = state.products.filter(p => state.wishlist.includes(p.id));
+            
+            if (wishlistProducts.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">Your wishlist is empty</div>';
+                return;
+            }
+
+            container.innerHTML = wishlistProducts.map(product => `
+                <div class="col-md-6 col-lg-4">
+                    <div class="card product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-badge">⭐ ${product.rating}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name}</h5>
+                            <h6 class="text-primary">₦${product.price.toLocaleString()}</h6>
+                            <button class="btn btn-primary btn-sm w-100" onclick="addToCart(${product.id})">Add to Cart</button>
+                            <button class="btn btn-danger btn-sm w-100 mt-2" onclick="toggleWishlist(${product.id})">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Notifications
+        function renderNotifications() {
+            const container = document.getElementById('notificationsList');
+            container.innerHTML = state.notifications.map((notif, index) => `
+                <div class="notification ${notif.type}">
+                    <div>
+                        <h6>${notif.title}</h6>
+                        <p class="mb-0">${notif.message}</p>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="removeNotification(${index})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            updateNotificationBadge();
+        }
+
+        // Add Notification
+        function addNotification(type, title, message) {
+            state.notifications.unshift({ type, title, message });
+            updateNotificationBadge();
+        }
+
+        // Remove Notification
+        function removeNotification(index) {
+            state.notifications.splice(index, 1);
+            renderNotifications();
+        }
+
+        // Update Notification Badge
+        function updateNotificationBadge() {
+            document.getElementById('notificationBadge').textContent = state.notifications.length;
+        }
+
+        // Review Functions
+        function openReviewModal(productId) {
+            state.currentProductId = productId;
+            state.currentRating = 0;
+            document.getElementById('reviewTitle').value = '';
+            document.getElementById('reviewComment').value = '';
+            new bootstrap.Modal(document.getElementById('reviewModal')).show();
+        }
+
+        function setRating(rating) {
+            state.currentRating = rating;
+            const stars = document.querySelectorAll('#ratingStars i');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('bi-star');
+                    star.classList.add('bi-star-fill');
+                    star.style.color = 'var(--gold)';
+                } else {
+                    star.classList.add('bi-star');
+                    star.classList.remove('bi-star-fill');
+                    star.style.color = 'currentColor';
+                }
+            });
+        }
+
+        function submitReview() {
+            const title = document.getElementById('reviewTitle').value;
+            const comment = document.getElementById('reviewComment').value;
+
+            if (!title || state.currentRating === 0) {
+                alert('Please add a rating and title');
+                return;
+            }
+
+            state.reviews.push({
+                productId: state.currentProductId,
+                rating: state.currentRating,
+                title,
+                comment,
+                author: 'You'
+            });
+
+            addNotification('success', 'Review Posted', 'Your review has been posted successfully');
+            bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+        }
+
+        // Checkout
+        function checkout() {
+            if (state.cart.length === 0) {
+                alert('Cart is empty');
+                return;
+            }
+
+            alert('Proceeding to checkout with ' + state.cart.length + ' items');
+            // Integrate with backend payment processing here
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            renderFeaturedProducts();
+            updateCartBadge();
+            updateNotificationBadge();
+        });
+    </script>
+</body>
+</html>
