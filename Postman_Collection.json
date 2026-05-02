@@ -1,0 +1,231 @@
+{
+  "info": {
+    "name": "ChrisTech API",
+    "description": "Complete e-commerce platform API collection",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{BASE_URL}}/api/auth/register", "host": ["{{BASE_URL}}"], "path": ["api", "auth", "register"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"TestPassword123!\",\n  \"phone\": \"+234801234567\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{BASE_URL}}/api/auth/login", "host": ["{{BASE_URL}}"], "path": ["api", "auth", "login"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"TestPassword123!\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{BASE_URL}}/api/products", "host": ["{{BASE_URL}}"], "path": ["api", "products"]}
+          }
+        },
+        {
+          "name": "Get Single Product",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{BASE_URL}}/api/products/{{PRODUCT_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "products", "{{PRODUCT_ID}}"]}
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{TOKEN}}"}
+            ],
+            "url": {"raw": "{{BASE_URL}}/api/products", "host": ["{{BASE_URL}}"], "path": ["api", "products"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"PlayStation 5\",\n  \"category\": \"gaming\",\n  \"price\": 75000,\n  \"image\": \"https://images.unsplash.com/photo-...\",\n  \"description\": \"Next-gen gaming console\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{TOKEN}}"}
+            ],
+            "url": {"raw": "{{BASE_URL}}/api/products/{{PRODUCT_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "products", "{{PRODUCT_ID}}"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 70000,\n  \"in_stock\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{TOKEN}}"}],
+            "url": {"raw": "{{BASE_URL}}/api/products/{{PRODUCT_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "products", "{{PRODUCT_ID}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Post Review",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{BASE_URL}}/api/reviews", "host": ["{{BASE_URL}}"], "path": ["api", "reviews"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{PRODUCT_ID}}\",\n  \"userId\": \"{{USER_ID}}\",\n  \"userName\": \"John Doe\",\n  \"rating\": 5,\n  \"title\": \"Excellent product!\",\n  \"comment\": \"Very satisfied with this purchase\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Product Reviews",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{BASE_URL}}/api/products/{{PRODUCT_ID}}/reviews", "host": ["{{BASE_URL}}"], "path": ["api", "products", "{{PRODUCT_ID}}", "reviews"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{BASE_URL}}/api/orders", "host": ["{{BASE_URL}}"], "path": ["api", "orders"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{USER_ID}}\",\n  \"items\": [\n    {\n      \"productId\": \"{{PRODUCT_ID}}\",\n      \"name\": \"Nintendo NES\",\n      \"price\": 15000,\n      \"quantity\": 1\n    }\n  ],\n  \"total\": 15000,\n  \"paymentMethod\": \"Card\",\n  \"address\": \"123 Main Street, Lagos, Nigeria\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get User Orders",
+          "request": {
+            "method": "GET",
+            "url": {"raw": "{{BASE_URL}}/api/orders/{{USER_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "orders", "{{USER_ID}}"]}
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{TOKEN}}"}
+            ],
+            "url": {"raw": "{{BASE_URL}}/api/orders/{{ORDER_ID}}/status", "host": ["{{BASE_URL}}"], "path": ["api", "orders", "{{ORDER_ID}}", "status"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shipped\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Track Event",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{BASE_URL}}/api/analytics", "host": ["{{BASE_URL}}"], "path": ["api", "analytics"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{USER_ID}}\",\n  \"event\": \"purchase\",\n  \"productId\": \"{{PRODUCT_ID}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{TOKEN}}"}],
+            "url": {"raw": "{{BASE_URL}}/api/analytics/dashboard", "host": ["{{BASE_URL}}"], "path": ["api", "analytics", "dashboard"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{TOKEN}}"}],
+            "url": {"raw": "{{BASE_URL}}/api/users/{{USER_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "users", "{{USER_ID}}"]}
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Authorization", "value": "Bearer {{TOKEN}}"}
+            ],
+            "url": {"raw": "{{BASE_URL}}/api/users/{{USER_ID}}/profile", "host": ["{{BASE_URL}}"], "path": ["api", "users", "{{USER_ID}}", "profile"]},
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+2347012345678\",\n  \"address\": \"456 New Street, Abuja, Nigeria\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Admin Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{TOKEN}}"}],
+            "url": {"raw": "{{BASE_URL}}/api/admin/dashboard", "host": ["{{BASE_URL}}"], "path": ["api", "admin", "dashboard"]}
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {"key": "BASE_URL", "value": "http://localhost:5000"},
+    {"key": "TOKEN", "value": ""},
+    {"key": "USER_ID", "value": ""},
+    {"key": "PRODUCT_ID", "value": ""},
+    {"key": "ORDER_ID", "value": ""}
+  ]
+}
