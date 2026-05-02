@@ -18,7 +18,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/christech')
   .then(() => console.log('✅ MongoDB Connected'))
   .catch(err => console.log('❌ MongoDB Error:', err.message));
+
 // ==================== BREVO EMAIL SETUP ====================
+
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
   port: 587,
@@ -31,29 +33,44 @@ const transporter = nodemailer.createTransport({
 
 // Welcome Email Function
 async function sendWelcomeEmail(name, email, method = 'email') {
+
   const mailOptions = {
-    from: `"Christech" <christopherpraise159@gmail.com>`,   // Your email as sender
+    from: `"Christech" <christopherpraise159@gmail.com>`,
     to: email,
     subject: `Welcome to Christech, ${name.split(' ')[0]}! 🎉`,
     html: `
       <div style="font-family:Arial,sans-serif; max-width:600px; margin:auto; padding:30px; background:#f9fafb; border-radius:12px;">
         <h2 style="color:#0a2540;">Welcome to Christech!</h2>
+
         <p>Hi <strong>${name}</strong>,</p>
-        <p>Thank you for joining Christech — Owerri's most trusted premium tech store.</p>
-        <p>You signed up using <strong>${method}</strong>.</p>
-        
+
+        <p>
+          Thank you for joining Christech — Owerri's most trusted premium tech store.
+        </p>
+
+        <p>
+          You signed up using <strong>${method}</strong>.
+        </p>
+
         <p>We're excited to have you! You can now enjoy:</p>
+
         <ul>
           <li>Fast delivery in Owerri</li>
           <li>Original products with warranty</li>
           <li>Best prices & exclusive deals</li>
         </ul>
-        
-        <p>Any questions? Chat us on WhatsApp: 
-          <a href="https://wa.me/2348102797105" style="color:#0077ff">08102797105</a>
+
+        <p>
+          Any questions? Chat us on WhatsApp:
+          <a href="https://wa.me/2348102797105" style="color:#0077ff">
+            08102797105
+          </a>
         </p>
-        
-        <p>Best regards,<br><strong>Christech Team</strong></p>
+
+        <p>
+          Best regards,<br>
+          <strong>Christech Team</strong>
+        </p>
       </div>
     `
   };
@@ -65,7 +82,9 @@ async function sendWelcomeEmail(name, email, method = 'email') {
     console.error('❌ Brevo Email Error:', err.message);
   }
 }
+
 // ==================== MODELS ====================
+
 const userSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
@@ -104,60 +123,118 @@ const Order = mongoose.model('Order', orderSchema);
 
 // ==================== ROUTES ====================
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Homepage Route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
-// Register Route with Welcome Email
+// Register Route
 app.post('/api/auth/register', async (req, res) => {
+
   try {
+
     const { name, email, password, phone } = req.body;
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email already exists" });
 
-    const user = new User({ name, email, password, phone, method: 'email' });
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Email already exists"
+      });
+    }
+
+    const user = new User({
+      name,
+      email,
+      password,
+      phone,
+      method: 'email'
+    });
+
     await user.save();
 
     // Send Welcome Email
     await sendWelcomeEmail(name, email, 'email');
 
-    res.json({ message: "User registered successfully", userId: user._id });
+    res.json({
+      message: "User registered successfully",
+      userId: user._id
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message
+    });
+
   }
+
 });
 
 // Login Route
 app.post('/api/auth/login', async (req, res) => {
+
   try {
-    const user = await User.findOne({ email: req.body.email });
+
+    const user = await User.findOne({
+      email: req.body.email
+    });
+
     if (!user || user.password !== req.body.password) {
-      return res.status(401).json({ message: "Invalid credentials" });
+
+      return res.status(401).json({
+        message: "Invalid credentials"
+      });
+
     }
-    res.json({ message: "Login successful", user });
+
+    res.json({
+      message: "Login successful",
+      user
+    });
+
   } catch (err) {
-    res.status(500).json({ error: err.message });
+
+    res.status(500).json({
+      error: err.message
+    });
+
   }
+
 });
 
-// Other Routes
+// Products Route
 app.get('/api/products', async (req, res) => {
+
   const products = await Product.find();
   res.json(products);
+
 });
 
+// Create Product
 app.post('/api/products', async (req, res) => {
+
   const product = new Product(req.body);
   await product.save();
+
   res.json(product);
+
 });
 
+// Orders Route
 app.post('/api/orders', async (req, res) => {
+
   const order = new Order(req.body);
   await order.save();
+
   res.json(order);
+
 });
 
+// ==================== START SERVER ====================
+
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Christech Server running on port ${PORT}`);
 });
