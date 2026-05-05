@@ -21,11 +21,17 @@ const pool = new Pool({
 });
 
 // ===== SUPABASE CLIENT (for Auth / Phone OTP) =====
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-);
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  );
+  console.log('✅ Supabase client ready');
+} else {
+  console.warn('⚠️  SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set — phone OTP disabled');
+}
 
 pool.connect()
   .then(() => console.log('✅ PostgreSQL Connected'))
@@ -282,32 +288,31 @@ async function sendPasswordResetEmail(email, otp) {
 // ===== OTP EMAIL / SMS HELPERS =====
 
 async function sendOTPEmail(name, email, otp) {
-  try {
-    await transporter.sendMail({
-      from: `"Christech" <${process.env.BREVO_EMAIL || 'christopherpraise159@gmail.com'}>`,
-      to: email,
-      subject: `${otp} — Your Christech Verification Code`,
-      html: `
-        <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px;background:#f9fafb;border-radius:12px;">
-          <div style="text-align:center;margin-bottom:20px">
-            <h2 style="color:#0a2540;margin:0">Verify Your Email</h2>
-          </div>
-          <p>Hi <strong>${name}</strong>,</p>
-          <p>Use this one-time code to complete your Christech account setup:</p>
-          <div style="background:#0a2540;color:#fff;font-size:40px;font-weight:900;letter-spacing:14px;text-align:center;padding:24px;border-radius:10px;margin:24px 0;font-family:monospace">${otp}</div>
-          <p style="color:#666;font-size:14px;">⏱ This code expires in <strong>10 minutes</strong>.</p>
-          <p style="color:#666;font-size:14px;">🔒 Never share this code with anyone. Christech staff will never ask for it.</p>
-          <p style="color:#666;font-size:14px;">If you did not create an account, you can safely ignore this email.</p>
-          <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0">
-          <p style="font-size:13px;color:#999">Christech — Owerri's trusted premium tech store<br>
-          <a href="https://wa.me/2348102797105" style="color:#0077ff">WhatsApp: 08102797105</a></p>
-        </div>
-      `
-    });
-    console.log(`✅ OTP email sent to ${email}`);
-  } catch (err) {
-    console.log('📧 OTP email error:', err.message);
+  if (!process.env.BREVO_SMTP_KEY) {
+    throw new Error('BREVO_SMTP_KEY is not set in your environment variables. Add it to your .env file.');
   }
+  await transporter.sendMail({
+    from: `"Christech" <${process.env.BREVO_EMAIL || 'christopherpraise159@gmail.com'}>`,
+    to: email,
+    subject: `${otp} — Your Christech Verification Code`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;padding:30px;background:#f9fafb;border-radius:12px;">
+        <div style="text-align:center;margin-bottom:20px">
+          <h2 style="color:#0a2540;margin:0">Verify Your Email</h2>
+        </div>
+        <p>Hi <strong>${name}</strong>,</p>
+        <p>Use this one-time code to complete your Christech account setup:</p>
+        <div style="background:#0a2540;color:#fff;font-size:40px;font-weight:900;letter-spacing:14px;text-align:center;padding:24px;border-radius:10px;margin:24px 0;font-family:monospace">${otp}</div>
+        <p style="color:#666;font-size:14px;">⏱ This code expires in <strong>10 minutes</strong>.</p>
+        <p style="color:#666;font-size:14px;">🔒 Never share this code with anyone. Christech staff will never ask for it.</p>
+        <p style="color:#666;font-size:14px;">If you did not create an account, you can safely ignore this email.</p>
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0">
+        <p style="font-size:13px;color:#999">Christech — Owerri's trusted premium tech store<br>
+        <a href="https://wa.me/2348102797105" style="color:#0077ff">WhatsApp: 08102797105</a></p>
+      </div>
+    `
+  });
+  console.log(`✅ OTP email sent to ${email}`);
 }
 
 // ===== AUTH ROUTES =====
@@ -343,7 +348,16 @@ app.post('/api/auth/register', async (req, res) => {
     );
 
     // Send OTP to the user's email
-    await sendOTPEmail(name, email, otp);
+    try {
+      await sendOTPEmail(name, email, otp);
+    } catch (emailErr) {
+      console.error('❌ Email send failed:', emailErr.message);
+      // Clean up the pending record so user can try again
+      await pool.query('DELETE FROM email_verifications WHERE email = $1', [email]);
+      return res.status(500).json({
+        message: `Could not send verification email: ${emailErr.message}`
+      });
+    }
 
     res.status(200).json({
       message: 'Verification code sent to your email',
@@ -531,6 +545,12 @@ app.post('/api/auth/send-phone-otp', async (req, res) => {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ message: 'Phone number is required' });
 
+    if (!supabase) {
+      return res.status(503).json({
+        message: 'SMS service not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to your .env file.'
+      });
+    }
+
     // Normalise to international format (+234...)
     const toNumber = phone.startsWith('+') ? phone : `+234${phone.replace(/^0/, '')}`;
 
@@ -538,7 +558,9 @@ app.post('/api/auth/send-phone-otp', async (req, res) => {
 
     if (error) {
       console.log('Supabase phone OTP error:', error.message);
-      return res.status(500).json({ message: 'Failed to send OTP. Check your phone number and try again.' });
+      return res.status(500).json({
+        message: 'Could not send SMS. Make sure you have enabled Phone provider in your Supabase dashboard (Authentication → Providers → Phone) and configured an SMS provider like Twilio or Vonage.'
+      });
     }
 
     res.json({ message: 'OTP sent to your phone via SMS' });
